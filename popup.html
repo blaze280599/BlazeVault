@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BlazeVault</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <span class="logo">🔒 BlazeVault</span>
+    <div id="headActions" hidden>
+      <button id="btnSettings" class="ghost" title="Settings">⚙</button>
+      <button id="btnLock" class="ghost">Lock</button>
+    </div>
+  </header>
+
+  <section id="setup" class="view" hidden>
+    <h2>Create your vault</h2>
+    <p class="muted">Pick a password. It encrypts everything in the vault and <strong>can't be recovered</strong> if you forget it.</p>
+    <form id="setupForm">
+      <input type="password" id="setupPw" placeholder="Password (8+ characters)" minlength="8" required autocomplete="new-password">
+      <input type="password" id="setupPw2" placeholder="Confirm password" required autocomplete="new-password">
+      <button type="submit" class="primary">Create vault</button>
+    </form>
+    <p class="muted small">Moving from another computer? <button type="button" class="link" data-restore>Restore a backup</button></p>
+  </section>
+
+  <section id="locked" class="view" hidden>
+    <form id="unlockForm">
+      <input type="password" id="unlockPw" placeholder="Password" required autocomplete="current-password">
+      <button type="submit" class="primary">Unlock</button>
+    </form>
+    <p id="pendingNote" class="muted small" hidden></p>
+    <details>
+      <summary class="muted small">Forgot password?</summary>
+      <p class="muted small">The vault can't be opened without it. You can restore a backup, or delete the vault and start over.</p>
+      <button type="button" class="link" data-restore>Restore a backup</button>
+      <form id="resetForm" class="row">
+        <input id="resetConfirm" placeholder="Type DELETE" required>
+        <button type="submit" class="danger">Delete vault</button>
+      </form>
+    </details>
+  </section>
+
+  <section id="main" class="view" hidden>
+    <form id="addForm" class="card">
+      <input id="addTitle" placeholder="Title" required>
+      <input id="addUrl" type="url" placeholder="https://…" required>
+      <div class="row">
+        <input id="addFolder" placeholder="Folder (optional)" list="folderList">
+        <button type="button" id="addCancel" hidden>Cancel</button>
+        <button type="submit" id="addSubmit" class="primary">Save page</button>
+      </div>
+      <datalist id="folderList"></datalist>
+    </form>
+    <div class="row">
+      <input id="search" type="search" placeholder="Search">
+      <select id="folderFilter"></select>
+      <button id="btnImportMain" title="Import bookmarks from Brave">Import</button>
+    </div>
+    <ul id="list"></ul>
+    <p id="empty" class="muted small" hidden></p>
+  </section>
+
+  <section id="settings" class="view" hidden>
+    <button id="btnBack" class="ghost">← Back</button>
+
+    <h3>Behaviour</h3>
+    <label class="field">Auto-lock after
+      <select id="setLock">
+        <option value="1">1 minute</option>
+        <option value="5">5 minutes</option>
+        <option value="10">10 minutes</option>
+        <option value="30">30 minutes</option>
+        <option value="60">1 hour</option>
+        <option value="0">Only when Brave closes</option>
+      </select>
+    </label>
+    <label class="check"><input type="checkbox" id="setPrivate"> Open bookmarks in a private window</label>
+    <p id="privateWarn" class="warn small" hidden>
+      Private windows need "Allow in Private" turned on for BlazeVault.
+      <button type="button" class="link" id="btnExtPage">Open extension settings</button>
+    </p>
+    <label class="check"><input type="checkbox" id="setHistory"> Remove saved pages from browsing history</label>
+
+    <h3 id="importSection">Import from Brave bookmarks</h3>
+    <select id="importFolder"></select>
+    <label class="check"><input type="checkbox" id="importRemove" checked> Remove imported bookmarks from Brave</label>
+    <button id="btnImport">Import</button>
+
+    <h3>Backup</h3>
+    <p class="muted small">Backups stay encrypted with the vault password.</p>
+    <div class="row">
+      <button id="btnExport">Download backup</button>
+      <button data-restore>Restore backup</button>
+    </div>
+
+    <h3>Change password</h3>
+    <form id="pwForm">
+      <input type="password" id="newPw" placeholder="New password (8+ characters)" minlength="8" required autocomplete="new-password">
+      <input type="password" id="newPw2" placeholder="Confirm new password" required autocomplete="new-password">
+      <button type="submit">Change password</button>
+    </form>
+  </section>
+
+  <section id="restore" class="view" hidden>
+    <h2>Restore a backup</h2>
+    <p class="muted">This replaces the vault on this computer. Unlock it afterwards with the password the backup was made with.</p>
+    <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+    <div class="row">
+      <button id="btnChooseFile" class="primary">Choose backup file</button>
+      <button id="btnRestoreCancel">Cancel</button>
+    </div>
+  </section>
+
+  <div id="toast" hidden></div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
